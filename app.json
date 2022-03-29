@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "rn-imdd",
+    "slug": "rn-imdd",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "rn-imdd"
+}

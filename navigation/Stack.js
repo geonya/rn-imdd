@@ -21,10 +21,20 @@ const ScreenThree = ({ navigation: { setOptions } }) => (
 const NativeStack = createNativeStackNavigator();
 
 const Stack = () => (
-	<NativeStack.Navigator>
-		<NativeStack.Screen name="One" component={ScreenOne} />
+	<NativeStack.Navigator
+		screenOptions={{ animation: "flip", headerBackTitleVisible: false }}
+	>
+		<NativeStack.Screen
+			options={{ title: "1" }}
+			name="One"
+			component={ScreenOne}
+		/>
 		<NativeStack.Screen name="Two" component={ScreenTwo} />
-		<NativeStack.Screen name="Three" component={ScreenThree} />
+		<NativeStack.Screen
+			name="Three"
+			component={ScreenThree}
+			options={{ presentation: "modal" }}
+		/>
 	</NativeStack.Navigator>
 );
 

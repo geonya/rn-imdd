@@ -11,7 +11,6 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
 	const isDark = useColorScheme() === "dark";
-
 	return (
 		<Tab.Navigator
 			screenOptions={{

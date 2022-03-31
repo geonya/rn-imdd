@@ -4,7 +4,6 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 const Container = styled.View`
-	margin-right: 20px;
 	align-items: center;
 `;
 const Title = styled.Text`

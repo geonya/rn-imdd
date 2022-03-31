@@ -26,10 +26,6 @@ const ListTitle = styled.Text`
 	margin-left: 10px;
 `;
 
-const TrendingScroll = styled.FlatList`
-	margin-top: 20px;
-` as unknown as typeof FlatList;
-
 const ComingSoonTitle = styled(ListTitle)`
 	margin-bottom: 20px;
 `;
@@ -102,7 +98,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 					<ListContainer>
 						<ListTitle>Trending Movies</ListTitle>
 						{trendingData ? (
-							<TrendingScroll
+							<FlatList
+								style={{ marginTop: 20 }}
 								horizontal
 								data={trendingData.results} // array
 								ItemSeparatorComponent={HSeperator}

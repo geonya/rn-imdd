@@ -1,11 +1,13 @@
-import React from "react";
-import { View, Text, FlatList, ScrollView } from "react-native";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
+import { RefreshControl, ScrollView } from "react-native";
+import { useQuery, useQueryClient } from "react-query";
 import { tvApi } from "../api";
+import HList from "../components/HList";
 import Loader from "../components/Loader";
-import VMedia from "../components/VMedia";
 
 const Tv = () => {
+	const queryClient = useQueryClient();
+	const [refreshing, setRefreshing] = useState(false);
 	const { isLoading: todayLoading, data: todayData } = useQuery(
 		["tv", "today"],
 		tvApi.airingToday
@@ -20,47 +22,25 @@ const Tv = () => {
 		tvApi.topRated
 	);
 	const loading = todayLoading || trendingLoading || topLoading;
+
+	const onRefresh = async () => {
+		setRefreshing(true);
+		await queryClient.refetchQueries(["tv"]);
+		setRefreshing(false);
+	};
 	if (loading) {
 		return <Loader />;
 	}
 	return (
-		<ScrollView>
-			<FlatList
-				data={trendingData.results}
-				horizontal
-				showsHorizontalScrollIndicator={false}
-				renderItem={({ item }) => (
-					<VMedia
-						title={item.original_name}
-						poster={item.poster_path || ""}
-						vote={item.vote_average}
-					/>
-				)}
-			/>
-			<FlatList
-				data={todayData.results}
-				horizontal
-				showsHorizontalScrollIndicator={false}
-				renderItem={({ item }) => (
-					<VMedia
-						title={item.original_name}
-						poster={item.poster_path || ""}
-						vote={item.vote_average}
-					/>
-				)}
-			/>
-			<FlatList
-				data={topData.results}
-				horizontal
-				showsHorizontalScrollIndicator={false}
-				renderItem={({ item }) => (
-					<VMedia
-						title={item.original_name}
-						poster={item.poster_path || ""}
-						vote={item.vote_average}
-					/>
-				)}
-			/>
+		<ScrollView
+			contentContainerStyle={{ paddingVertical: 30 }}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+			}
+		>
+			<HList title={"Trending TV"} data={trendingData.results} />
+			<HList title={"Airing Today"} data={todayData.results} />
+			<HList title={"Top Rated TV"} data={topData.results} />
 		</ScrollView>
 	);
 };

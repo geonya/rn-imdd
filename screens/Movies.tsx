@@ -8,14 +8,10 @@ import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
 import { useQuery, useQueryClient } from "react-query";
 import { MovieResponse, moviesApi } from "../api";
+import Loader from "../components/Loader";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const Loader = styled.View`
-	flex: 1;
-	justify-content: center;
-	align-items: center;
-`;
 const ListContainer = styled.View`
 	margin-bottom: 40px;
 `;
@@ -62,9 +58,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 		nowPlayingIsRefetching || trendingIsRefetching || upcomingIsRefetching;
 
 	return loading ? (
-		<Loader>
-			<ActivityIndicator size="large" />
-		</Loader>
+		<Loader />
 	) : upcomingData ? (
 		<FlatList
 			onRefresh={onRefresh}

@@ -1,26 +1,35 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
 import { tvApi } from "../api";
 import HList from "../components/HList";
 import Loader from "../components/Loader";
+import { getNextPageParamUtil } from "../utils";
 
 const Tv = () => {
 	const queryClient = useQueryClient();
 	const [refreshing, setRefreshing] = useState(false);
-	const { isLoading: todayLoading, data: todayData } = useQuery(
-		["tv", "today"],
-		tvApi.airingToday
-	);
+	const {
+		isLoading: todayLoading,
+		data: todayData,
+		hasNextPage: hasNextPageToday,
+		fetchNextPage: fetchNextPageToday,
+	} = useInfiniteQuery(["tv", "today"], tvApi.airingToday, {
+		getNextPageParam: getNextPageParamUtil,
+	});
 
 	const { isLoading: trendingLoading, data: trendingData } = useQuery(
 		["tv", "trending"],
 		tvApi.trending
 	);
-	const { isLoading: topLoading, data: topData } = useQuery(
-		["tv", "top"],
-		tvApi.topRated
-	);
+	const {
+		isLoading: topLoading,
+		data: topData,
+		hasNextPage: hasNextPageTop,
+		fetchNextPage: fetchNextPageTop,
+	} = useInfiniteQuery(["tv", "top"], tvApi.topRated, {
+		getNextPageParam: getNextPageParamUtil,
+	});
 	const loading = todayLoading || trendingLoading || topLoading;
 
 	const onRefresh = async () => {
@@ -42,9 +51,21 @@ const Tv = () => {
 				<HList title={"Trending TV"} data={trendingData.results} />
 			) : null}
 			{todayData ? (
-				<HList title={"Airing Today"} data={todayData.results} />
+				<HList
+					title={"Airing Today"}
+					data={todayData.pages.map((page) => page.results).flat()}
+					hasNextPage={hasNextPageToday}
+					fetchNextPage={fetchNextPageToday}
+				/>
 			) : null}
-			{topData ? <HList title={"Top Rated TV"} data={topData.results} /> : null}
+			{topData ? (
+				<HList
+					title={"Top Rated TV"}
+					data={topData.pages.map((page) => page.results).flat()}
+					hasNextPage={hasNextPageTop}
+					fetchNextPage={fetchNextPageTop}
+				/>
+			) : null}
 		</ScrollView>
 	);
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { FlatList } from "react-native";
 import styled from "styled-components/native";
 import { Movie, TV } from "../api";
+import { loadMore } from "../utils";
 import VMedia from "./VMedia";
 
 const ListContainer = styled.View`
@@ -23,30 +24,42 @@ export const HListSeparator = styled.View`
 interface HListProps {
 	title: string;
 	data: any[];
+	hasNextPage?: boolean | undefined;
+	fetchNextPage?: any;
 }
 
-const HList: React.FC<HListProps> = ({ title, data }) => (
-	<ListContainer>
-		<ListTitle>{title}</ListTitle>
-		<FlatList
-			data={data}
-			horizontal
-			showsHorizontalScrollIndicator={false}
-			ItemSeparatorComponent={HListSeparator}
-			contentContainerStyle={{ paddingHorizontal: 30 }}
-			keyExtractor={(item: Movie | TV) => item.id + ""}
-			renderItem={({ item }: { item: Movie | TV }) => (
-				<VMedia
-					posterPath={item.poster_path || ""}
-					originalTitle={
-						"original_title" in item ? item.original_title : item.original_name
-					}
-					vote={item.vote_average}
-					fullData={item}
-				/>
-			)}
-		/>
-	</ListContainer>
-);
+const HList: React.FC<HListProps> = ({
+	title,
+	data,
+	hasNextPage,
+	fetchNextPage,
+}) => {
+	return (
+		<ListContainer>
+			<ListTitle>{title}</ListTitle>
+			<FlatList
+				data={data}
+				horizontal
+				onEndReached={() => loadMore(hasNextPage, fetchNextPage)}
+				showsHorizontalScrollIndicator={false}
+				ItemSeparatorComponent={HListSeparator}
+				contentContainerStyle={{ paddingHorizontal: 30 }}
+				keyExtractor={(item: Movie | TV) => item.id + ""}
+				renderItem={({ item }: { item: Movie | TV }) => (
+					<VMedia
+						posterPath={item.poster_path || ""}
+						originalTitle={
+							"original_title" in item
+								? item.original_title
+								: item.original_name
+						}
+						vote={item.vote_average}
+						fullData={item}
+					/>
+				)}
+			/>
+		</ListContainer>
+	);
+};
 
 export default HList;

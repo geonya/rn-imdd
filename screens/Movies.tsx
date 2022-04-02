@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { Dimensions, FlatList } from "react-native";
+import { FlatList } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
@@ -9,8 +9,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { moviesApi } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+import { SCREEN_HEIGHT } from "../styled";
 
 const ListTitle = styled.Text`
 	color: ${(props) => props.theme.textColor};

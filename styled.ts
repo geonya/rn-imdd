@@ -1,9 +1,7 @@
 import { DefaultTheme } from "styled-components/native";
-
-// import original module declarations
 import "styled-components/native";
+import { Dimensions } from "react-native";
 
-// and extend them!
 declare module "styled-components" {
 	export interface DefaultTheme {
 		mainBgColor: string;
@@ -22,3 +20,5 @@ export const darkTheme: DefaultTheme = {
 	textColor: "#d2dae2",
 	accentColor: "#ffa801",
 };
+
+export const { height: SCREEN_HEIGHT } = Dimensions.get("window");

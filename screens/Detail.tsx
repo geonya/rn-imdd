@@ -1,12 +1,40 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
-import { Text } from "react-native";
+import { StyleSheet } from "react-native";
+import { useQuery } from "react-query";
 import styled from "styled-components/native";
-import { Movie, TV } from "../api";
+import { Movie, moviesApi, TV, tvApi } from "../api";
+import { BLACK_COLOR } from "../colors";
 import Poster from "../components/Poster";
+import { SCREEN_HEIGHT } from "../styled";
+import { makeImagePath } from "../utils";
 
 const Container = styled.ScrollView`
 	background-color: ${(props) => props.theme.mainBgColor};
+`;
+
+const Header = styled.View`
+	height: ${SCREEN_HEIGHT / 4}px;
+	justify-content: flex-end;
+	padding: 0 20px;
+`;
+const Background = styled.Image``;
+const Column = styled.View`
+	flex-direction: row;
+	width: 80%;
+`;
+const Title = styled.Text`
+	color: ${(props) => props.theme.textColor};
+	font-size: 25px;
+	align-self: flex-end;
+	margin-left: 15px;
+	font-weight: 500;
+`;
+const Overview = styled.Text`
+	color: ${(props) => props.theme.textColor};
+	margin-top: 20px;
+	padding: 0px 20px;
 `;
 
 type RootStackParamList = {
@@ -19,17 +47,48 @@ const Detail: React.FC<DetailScreenProps> = ({
 	navigation: { setOptions },
 	route: { params },
 }) => {
+	const { isLoading: moviesLoading, data: moviesData } = useQuery(
+		["movies", params.id],
+		moviesApi.detail,
+		{
+			enabled: "original_title" in params,
+		}
+	);
+	const { isLoading: tvLoading, data: tvData } = useQuery(
+		["tv", params.id],
+		tvApi.detail,
+		{
+			enabled: "original_name" in params,
+		}
+	);
+	console.log("movie", moviesData);
+	console.log("tv", tvData);
 	useEffect(() => {
 		setOptions({
-			title:
-				"original_title" in params
-					? params.original_title
-					: params.original_name,
+			title: "original_title" in params ? "Movie" : "TV Show",
 		});
 	}, []);
 	return (
 		<Container>
-			<Poster path={params.poster_path || ""} />
+			<Header>
+				<Background
+					style={StyleSheet.absoluteFill}
+					source={{ uri: makeImagePath(params.backdrop_path || "") }}
+				/>
+				<LinearGradient
+					colors={["transparent", BLACK_COLOR]}
+					style={StyleSheet.absoluteFill}
+				/>
+				<Column>
+					<Poster path={params.poster_path || ""} />
+					<Title>
+						{"original_title" in params
+							? params.original_title
+							: params.original_name}
+					</Title>
+				</Column>
+			</Header>
+			<Overview>{params.overview}</Overview>
 		</Container>
 	);
 };

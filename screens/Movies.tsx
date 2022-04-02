@@ -6,7 +6,7 @@ import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import { useQuery, useQueryClient } from "react-query";
-import { MovieResponse, moviesApi } from "../api";
+import { moviesApi } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
 
@@ -30,19 +30,24 @@ const VSeperator = styled.View`
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 	const queryClient = useQueryClient();
 	const [refreshing, setRefreshing] = useState(false);
-	const { isLoading: nowPlayingLoading, data: nowPlayingData } =
-		useQuery<MovieResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
-	const { isLoading: trendingLoading, data: trendingData } =
-		useQuery<MovieResponse>(["movies", "trending"], moviesApi.trending);
-	const { isLoading: upcomingLoading, data: upcomingData } =
-		useQuery<MovieResponse>(["movies", "upcoming"], moviesApi.upcoming);
+	const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+		["movies", "nowPlaying"],
+		moviesApi.nowPlaying
+	);
+	const { isLoading: trendingLoading, data: trendingData } = useQuery(
+		["movies", "trending"],
+		moviesApi.trending
+	);
+	const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+		["movies", "upcoming"],
+		moviesApi.upcoming
+	);
 	const onRefresh = async () => {
 		setRefreshing(true);
 		await queryClient.refetchQueries(["movies"]);
 		setRefreshing(false);
 	};
 	const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
-
 	return loading ? (
 		<Loader />
 	) : upcomingData ? (
@@ -72,6 +77,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 								originalTitle={movie.original_title}
 								voteAverage={movie.vote_average}
 								overview={movie.overview}
+								totalData={movie}
 							/>
 						))}
 					</Swiper>
@@ -87,10 +93,11 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 			showsVerticalScrollIndicator={false}
 			renderItem={({ item }) => (
 				<HMedia
-					title={item.original_title}
-					poster={item.poster_path || ""}
-					release={item.release_date}
+					originalTitle={item.original_title}
+					posterPath={item.poster_path || ""}
+					releaseDate={item.release_date}
 					overview={item.overview}
+					totalData={item}
 				/>
 			)}
 		/>

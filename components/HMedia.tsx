@@ -1,5 +1,8 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { Movie, TV } from "../api";
 import Poster from "./Poster";
 
 const Container = styled.View`
@@ -31,37 +34,51 @@ const Release = styled.Text`
 `;
 
 interface HMediaProps {
-	title: string;
-	poster: string;
-	release: string;
+	originalTitle: string;
+	posterPath: string;
+	releaseDate: string;
 	overview: string;
+	totalData: Movie | TV;
 }
 
 const HMedia: React.FC<HMediaProps> = ({
-	title,
-	poster,
-	release,
+	originalTitle,
+	posterPath,
+	releaseDate,
 	overview,
+	totalData,
 }) => {
+	const navigation = useNavigation();
+	const goToDetail = () => {
+		//@ts-ignore
+		navigation.navigate("Stack", {
+			screen: "Detail",
+			params: {
+				...totalData,
+			},
+		});
+	};
 	return (
-		<Container>
-			<Poster path={poster} />
-			<HColumn>
-				<Title>{title}</Title>
-				<Release>
-					{new Date(release).toLocaleDateString("ko", {
-						month: "long",
-						day: "numeric",
-						year: "numeric",
-					})}
-				</Release>
-				<Overview>
-					{overview !== "" && overview.length > 150
-						? `${overview.slice(0, 150)}...`
-						: overview}
-				</Overview>
-			</HColumn>
-		</Container>
+		<TouchableOpacity onPress={goToDetail}>
+			<Container>
+				<Poster path={posterPath} />
+				<HColumn>
+					<Title>{originalTitle}</Title>
+					<Release>
+						{new Date(releaseDate).toLocaleDateString("ko", {
+							month: "long",
+							day: "numeric",
+							year: "numeric",
+						})}
+					</Release>
+					<Overview>
+						{overview !== "" && overview.length > 150
+							? `${overview.slice(0, 150)}...`
+							: overview}
+					</Overview>
+				</HColumn>
+			</Container>
+		</TouchableOpacity>
 	);
 };
 

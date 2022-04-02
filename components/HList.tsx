@@ -1,21 +1,22 @@
 import React from "react";
 import { FlatList } from "react-native";
 import styled from "styled-components/native";
-import { Movie } from "../api";
+import { Movie, TV } from "../api";
 import VMedia from "./VMedia";
 
 const ListContainer = styled.View`
 	margin-bottom: 40px;
 `;
+
 const ListTitle = styled.Text`
-	color: ${(props) => props.theme.textColor};
-	font-size: 16px;
+	color: white;
+	font-size: 18px;
 	font-weight: 600;
-	margin-left: 10px;
+	margin-left: 30px;
 	margin-bottom: 20px;
 `;
 
-export const HListSeperator = styled.View`
+export const HListSeparator = styled.View`
 	width: 20px;
 `;
 
@@ -31,14 +32,17 @@ const HList: React.FC<HListProps> = ({ title, data }) => (
 			data={data}
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			ItemSeparatorComponent={HListSeperator}
+			ItemSeparatorComponent={HListSeparator}
 			contentContainerStyle={{ paddingHorizontal: 30 }}
-			keyExtractor={(item) => item.id + ""}
-			renderItem={({ item }) => (
+			keyExtractor={(item: Movie | TV) => item.id + ""}
+			renderItem={({ item }: { item: Movie | TV }) => (
 				<VMedia
-					title={item.original_title ?? item.original_name}
-					poster={item.poster_path || ""}
+					posterPath={item.poster_path || ""}
+					originalTitle={
+						"original_title" in item ? item.original_title : item.original_name
+					}
 					vote={item.vote_average}
+					fullData={item}
 				/>
 			)}
 		/>

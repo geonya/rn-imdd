@@ -57,7 +57,7 @@ const Search = () => {
 			{moviesData ? (
 				<HList title="Movies Results" data={moviesData.results} />
 			) : null}
-			{tvData ? <HList title="Movies Results" data={tvData.results} /> : null}
+			{tvData ? <HList title="TV Results" data={tvData.results} /> : null}
 		</Container>
 	);
 };

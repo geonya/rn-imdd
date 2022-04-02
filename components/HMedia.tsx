@@ -38,7 +38,7 @@ interface HMediaProps {
 	posterPath: string;
 	releaseDate: string;
 	overview: string;
-	totalData: Movie | TV;
+	totalData: Movie;
 }
 
 const HMedia: React.FC<HMediaProps> = ({

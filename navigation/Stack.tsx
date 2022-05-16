@@ -1,5 +1,4 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Detail from "../screens/Detail";
 import { useColorScheme } from "react-native";

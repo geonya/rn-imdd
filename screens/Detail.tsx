@@ -114,7 +114,6 @@ const Detail: React.FC<DetailScreenProps> = ({
 		const baseUrl = `http://m.youtube.com/watch?v=${videoId}`;
 		// await Linking.openURL(baseUrl);
 		await webBrowser.openBrowserAsync(baseUrl);
-		``;
 	};
 	return (
 		<Container>

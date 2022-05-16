@@ -8,7 +8,6 @@ import Loader from "../components/Loader";
 
 const Container = styled.ScrollView`
 	margin-top: 10px;
-	display: flex;
 `;
 
 const SearchBar = styled.TextInput`
